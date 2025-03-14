@@ -45,12 +45,12 @@ class Grid {
         for (Ship ship : ships) {
             boolean placed = false;
             while (!placed) {
-                System.out.println("Enter row (A-J) and column (0-9) for ship size " + ship.getSize() + " (e.g. A5): ");
+                System.out.println("Enter row (A-J) and column (1-10) for ship size " + ship.getSize() + " (e.g. A5): ");
                 String input = scanner.next().trim().toUpperCase();
                 System.out.println("Horizontal? (y/n): ");
                 boolean horizontal = scanner.next().equalsIgnoreCase("y");
                 int row = input.charAt(0) - 'A';
-                int col = Integer.parseInt(input.substring(1));
+                int col = Integer.parseInt(input.substring(1)) - 1;
                 placed = placeShip(row, col, ship, horizontal);
                 if (!placed) {
                     System.out.println("Invalid placement. Try again.");
@@ -99,7 +99,7 @@ class Grid {
 
     public void printTrackingGrid() {
         System.out.print("  ");
-        for (int i = 0; i < GRID_SIZE; i++) {
+        for (int i = 1; i <= GRID_SIZE; i++) {
             System.out.print(i + " ");
         }
         System.out.println();
@@ -139,8 +139,39 @@ class Grid {
             trackingGrid[row][col] = MISS;
             return "Miss!";
         }
-        return "Invalid Input!";
+        return "Already Attacked!";
     }
+//    public void playerTurn(char[][] grid , char[][] trackingGrid) {
+//        System.out.println("Enter target (e.g. A5): ");
+//        Scanner scanner = new Scanner(System.in);
+//        String input = scanner.next().trim().toUpperCase();
+//        if(!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
+//                && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[0-9]|10")))
+//        {
+//            System.out.println("Invalid Input! Missed your turn:(");
+//            return;
+//        }
+//
+//        int row = input.charAt(0) - 'A';
+//        int col = Integer.parseInt(input.substring(1)) - 1;
+//
+//        if(trackingGrid[row][col] == HIT || trackingGrid[row][col] == MISS)
+//        {
+//            System.out.println("Already attacked this spot! Missed your turn:(");
+//            return;
+//        }
+//        if(grid[row][col] == SHIP)
+//        {
+//            System.out.println("Hit!");
+//            grid[row][col] = HIT;
+//            trackingGrid[row][col] = HIT;
+//        }
+//        else
+//        {
+//            System.out.println("Missed!");
+//            trackingGrid[row][col] = MISS;
+//        }
+//    }
 }
 
 // Class representing the AI Player
@@ -159,16 +190,15 @@ public class OopBattleShip {
         Grid player1Grid = new Grid();
         Grid player2Grid = new Grid();
         Grid aiGrid = new Grid();
-        System.out.println("Select game mode:");
+        System.out.println("Select Your Game Mode:");
         System.out.println("1. Player vs Player");
         System.out.println("2. Player vs AI");
         int choice = scanner.nextInt();
 
-        System.out.println("Do you want to place your ships manually or randomly?");
+        System.out.println("Do you want to place your ships Manually or Randomly?");
         System.out.println("1. Manual");
         System.out.println("2. Random");
         int placementChoice = scanner.nextInt();
-
 
         if (choice == 1 && placementChoice == 1) {
             player1Grid.manualPlacement(scanner, ships);
@@ -197,13 +227,15 @@ public class OopBattleShip {
                     System.out.println("Enter target (e.g. A5): ");
                     String input = scanner.next().trim().toUpperCase();
 
-                    if (!(input.length() == 2 && input.charAt(0) >= 'A' && input.charAt(0) < ('A' + 10)
-                            && input.substring(1).matches("[0-9]"))){
+                    if (!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
+                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10"))){
                         System.out.println("Invalid Input! Missed Your Turn.");
-                        return;
+                        player1Turn = !player1Turn;
+                        continue;
                     }
+
                     int row = input.charAt(0) - 'A';
-                    int col = Integer.parseInt(input.substring(1));
+                    int col = Integer.parseInt(input.substring(1)) - 1;
 
                     String Result = player2Grid.attack(row, col);
                     System.out.println(Result);
@@ -215,13 +247,13 @@ public class OopBattleShip {
                     System.out.println("Enter target (e.g. A5): ");
                     String input = scanner.next().trim().toUpperCase();
 
-                    if (!(input.length() == 2 && input.charAt(0) >= 'A' && input.charAt(0) < ('A' + 10)
-                            && input.substring(1).matches("[0-9]"))){
+                    if (!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
+                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10"))){
                         System.out.println("Invalid Input! Missed Your Turn.");
                         return;
                     }
                     int row = input.charAt(0) - 'A';
-                    int col = Integer.parseInt(input.substring(1));
+                    int col = Integer.parseInt(input.substring(1)) - 1;
 
                     String Result = player1Grid.attack(row, col);
                     System.out.println(Result);
@@ -238,14 +270,15 @@ public class OopBattleShip {
                     System.out.println("Enter target (e.g. A5): ");
                     String input = scanner.next().trim().toUpperCase();
 
-                    if (!(input.length() == 2 && input.charAt(0) >= 'A' && input.charAt(0) < ('A' + 10)
-                            && input.substring(1).matches("[0-9]")))
+                    if (!(input.length() >= 2 && input.length() <= 3 && input.charAt(0) >= 'A'
+                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10")))
                     {
                         System.out.println("Invalid Input! Missed Your Turn.");
+                        player1Turn = !player1Turn;
                         continue;
                     }
                     int row = input.charAt(0) - 'A';
-                    int col = Integer.parseInt(input.substring(1));
+                    int col = Integer.parseInt(input.substring(1)) - 1;
 
                     String Result = aiGrid.attack(row, col);
                     System.out.println(Result);
@@ -269,9 +302,9 @@ public class OopBattleShip {
         }
         else if (choice == 2) {
             if (player1Grid.isGameOver())
-                System.out.println("Player 1 Wins!");
-            else
                 System.out.println("AI Wins!");
+            else
+                System.out.println("Player 1 Wins!");
         }
     }
 }
