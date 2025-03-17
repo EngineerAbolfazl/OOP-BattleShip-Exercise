@@ -2,20 +2,24 @@ import java.util.Scanner;
 import java.util.Random;
 
 // Class representing a Ship
-class Ship {
+class Ship
+{
     private final int size;
 
-    public Ship(int size) {
+    public Ship(int size)
+    {
         this.size = size;
     }
 
-    public int getSize() {
+    public int getSize()
+    {
         return size;
     }
 }
 
 // Class representing the Grid
-class Grid {
+class Grid
+{
     private static final int GRID_SIZE = 10;
     private static final char WATER = '~';
     private static final char SHIP = 'S';
@@ -26,25 +30,32 @@ class Grid {
     private final char[][] trackingGrid;
     private final Random rand = new Random();
 
-    public Grid() {
+    public Grid()
+    {
         grid = new char[GRID_SIZE][GRID_SIZE];
         trackingGrid = new char[GRID_SIZE][GRID_SIZE];
         initializeGrid();
     }
 
-    public void initializeGrid() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
+    public void initializeGrid()
+    {
+        for (int i = 0; i < GRID_SIZE; i++)
+        {
+            for (int j = 0; j < GRID_SIZE; j++)
+            {
                 grid[i][j] = WATER;
                 trackingGrid[i][j] = WATER;
             }
         }
     }
 
-    public void manualPlacement(Scanner scanner, Ship[] ships) {
-        for (Ship ship : ships) {
+    public void manualPlacement(Scanner scanner, Ship[] ships)
+    {
+        for (Ship ship : ships)
+        {
             boolean placed = false;
-            while (!placed) {
+            while (!placed)
+            {
                 System.out.println("Enter row (A-J) and column (1-10) for ship size " + ship.getSize() + " (e.g. A5): ");
                 String input = scanner.next().trim().toUpperCase();
                 System.out.println("Horizontal? (y/n): ");
@@ -52,17 +63,21 @@ class Grid {
                 int row = input.charAt(0) - 'A';
                 int col = Integer.parseInt(input.substring(1)) - 1;
                 placed = placeShip(row, col, ship, horizontal);
-                if (!placed) {
+                if (!placed)
+                {
                     System.out.println("Invalid placement. Try again.");
                 }
             }
         }
     }
 
-    public void randomPlacement(Ship[] ships) {
-        for (Ship ship : ships) {
+    public void randomPlacement(Ship[] ships)
+    {
+        for (Ship ship : ships)
+        {
             boolean placed = false;
-            while (!placed) {
+            while (!placed)
+            {
                 int row = rand.nextInt(GRID_SIZE);
                 int col = rand.nextInt(GRID_SIZE);
                 boolean horizontal = rand.nextBoolean();
@@ -71,13 +86,19 @@ class Grid {
         }
     }
 
-    public boolean placeShip(int row, int col, Ship ship, boolean horizontal) {
+    public boolean placeShip(int row, int col, Ship ship, boolean horizontal)
+    {
         int size = ship.getSize();
-        if (canPlaceShip(row, col, size, horizontal)) {
-            for (int i = 0; i < size; i++) {
-                if (horizontal) {
+        if (canPlaceShip(row, col, size, horizontal))
+        {
+            for (int i = 0; i < size; i++)
+            {
+                if (horizontal)
+                {
                     grid[row][col + i] = SHIP;
-                } else {
+                }
+                else
+                {
                     grid[row + i][col] = SHIP;
                 }
             }
@@ -86,43 +107,57 @@ class Grid {
         return false;
     }
 
-    private boolean canPlaceShip(int row, int col, int size, boolean horizontal) {
-        if (horizontal && col + size > GRID_SIZE) return false;
-        if (!horizontal && row + size > GRID_SIZE) return false;
+    private boolean canPlaceShip(int row, int col, int size, boolean horizontal)
+    {
+        if (horizontal && col + size > GRID_SIZE)
+            return false;
+        if (!horizontal && row + size > GRID_SIZE)
+            return false;
 
-        for (int i = 0; i < size; i++) {
-            if (horizontal && grid[row][col + i] != WATER) return false;
-            if (!horizontal && grid[row + i][col] != WATER) return false;
+        for (int i = 0; i < size; i++)
+        {
+            if (horizontal && grid[row][col + i] != WATER)
+                return false;
+            if (!horizontal && grid[row + i][col] != WATER)
+                return false;
         }
         return true;
     }
 
-    public void printTrackingGrid() {
+    public void printTrackingGrid()
+    {
         System.out.print("  ");
-        for (int i = 1; i <= GRID_SIZE; i++) {
+        for (int i = 1; i <= GRID_SIZE; i++)
+        {
             System.out.print(i + " ");
         }
         System.out.println();
 
-        for (int i = 0; i < GRID_SIZE; i++) {
+        for (int i = 0; i < GRID_SIZE; i++)
+        {
             System.out.print((char) ('A' + i) + " ");
-            for (int j = 0; j < GRID_SIZE; j++) {
+            for (int j = 0; j < GRID_SIZE; j++)
+            {
                 System.out.print(trackingGrid[i][j] + " ");
             }
             System.out.println();
         }
     }
 
-    public boolean isGameOver() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
+    public boolean isGameOver()
+    {
+        for (int i = 0; i < GRID_SIZE; i++)
+        {
+            for (int j = 0; j < GRID_SIZE; j++)
+            {
                 if (grid[i][j] == SHIP) return false;
             }
         }
         return true;
     }
 
-    public String attack(int row, int col) {
+    public String attack(int row, int col)
+    {
         if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE)
         {
             return "Invalid Input!";
@@ -141,49 +176,21 @@ class Grid {
         }
         return "Already Attacked!";
     }
-//    public void playerTurn(char[][] grid , char[][] trackingGrid) {
-//        System.out.println("Enter target (e.g. A5): ");
-//        Scanner scanner = new Scanner(System.in);
-//        String input = scanner.next().trim().toUpperCase();
-//        if(!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
-//                && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[0-9]|10")))
-//        {
-//            System.out.println("Invalid Input! Missed your turn:(");
-//            return;
-//        }
-//
-//        int row = input.charAt(0) - 'A';
-//        int col = Integer.parseInt(input.substring(1)) - 1;
-//
-//        if(trackingGrid[row][col] == HIT || trackingGrid[row][col] == MISS)
-//        {
-//            System.out.println("Already attacked this spot! Missed your turn:(");
-//            return;
-//        }
-//        if(grid[row][col] == SHIP)
-//        {
-//            System.out.println("Hit!");
-//            grid[row][col] = HIT;
-//            trackingGrid[row][col] = HIT;
-//        }
-//        else
-//        {
-//            System.out.println("Missed!");
-//            trackingGrid[row][col] = MISS;
-//        }
-//    }
 }
 
 // Class representing the AI Player
-class AIPlayer {
+class AIPlayer
+{
     private final Random rand = new Random();
     public int[] makeMove()
     {
         return new int[]{rand.nextInt(10), rand.nextInt(10)};
     }
 }
-public class OopBattleShip {
-    public static void main(String[] args) {
+public class OopBattleShip
+{
+    public static void main(String[] args)
+    {
         Scanner scanner = new Scanner(System.in);
         AIPlayer ai = new AIPlayer();
         Ship[] ships = { new Ship(5), new Ship(4), new Ship(3), new Ship(2) };
@@ -200,23 +207,32 @@ public class OopBattleShip {
         System.out.println("2. Random");
         int placementChoice = scanner.nextInt();
 
-        if (choice == 1 && placementChoice == 1) {
+        if (choice == 1 && placementChoice == 1)
+        {
             player1Grid.manualPlacement(scanner, ships);
             player2Grid.manualPlacement(scanner, ships);
-        } else if (choice == 1 && placementChoice == 2) {
+        }
+        else if (choice == 1 && placementChoice == 2)
+        {
             player1Grid.randomPlacement(ships);
             player2Grid.randomPlacement(ships);
-        } else if (choice == 2 && placementChoice == 1) {
+        }
+        else if (choice == 2 && placementChoice == 1)
+        {
             player1Grid.manualPlacement(scanner, ships);
             aiGrid.randomPlacement(ships);
-        } else if (choice == 2 && placementChoice == 2) {
+        }
+        else if (choice == 2 && placementChoice == 2)
+        {
             player1Grid.randomPlacement(ships);
             aiGrid.randomPlacement(ships);
         }
-        else{
+        else
+        {
             System.out.println("Invalid Input! Restart the game.");
         }
-        if (choice == 1) {
+        if (choice == 1)
+        {
             boolean player1Turn = true;
             while(!player1Grid.isGameOver() && !player2Grid.isGameOver())
             {
@@ -228,7 +244,8 @@ public class OopBattleShip {
                     String input = scanner.next().trim().toUpperCase();
 
                     if (!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
-                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10"))){
+                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10")))
+                    {
                         System.out.println("Invalid Input! Missed Your Turn.");
                         player1Turn = !player1Turn;
                         continue;
@@ -248,7 +265,8 @@ public class OopBattleShip {
                     String input = scanner.next().trim().toUpperCase();
 
                     if (!(input.length() >= 2 && input.length() <=3 && input.charAt(0) >= 'A'
-                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10"))){
+                        && input.charAt(0) < ('A' + 10) && input.substring(1).matches("[1-9]|10")))
+                    {
                         System.out.println("Invalid Input! Missed Your Turn.");
                         return;
                     }
@@ -261,11 +279,13 @@ public class OopBattleShip {
                 player1Turn = !player1Turn;
             }
         }
-
-        else if (choice == 2) {
+        else if (choice == 2)
+        {
             boolean player1Turn = true;
-            while (!player1Grid.isGameOver() && !aiGrid.isGameOver()){
-                if (player1Turn){
+            while (!player1Grid.isGameOver() && !aiGrid.isGameOver())
+            {
+                if (player1Turn)
+                {
                     aiGrid.printTrackingGrid();
                     System.out.println("Enter target (e.g. A5): ");
                     String input = scanner.next().trim().toUpperCase();
@@ -283,7 +303,8 @@ public class OopBattleShip {
                     String Result = aiGrid.attack(row, col);
                     System.out.println(Result);
                 }
-                else {
+                else
+                {
                     int[] aiMove = ai.makeMove();
                     System.out.println("AI attacked " + (char)('A' + aiMove[0]) + aiMove[1]);
                     String Result = player1Grid.attack(aiMove[0], aiMove[1]);
@@ -294,13 +315,15 @@ public class OopBattleShip {
         }
 
         System.out.println("Game over!");
-        if (choice == 1) {
+        if (choice == 1)
+        {
             if (player1Grid.isGameOver())
                 System.out.println("Player 2 Wins!");
             else
                 System.out.println("Player 1 Wins!");
         }
-        else if (choice == 2) {
+        else if (choice == 2)
+        {
             if (player1Grid.isGameOver())
                 System.out.println("AI Wins!");
             else
